@@ -54,3 +54,9 @@ type StudentsEmployees struct {
 	CreatedAt   time.Time `json:"created_at"`
 	IsActive    bool      `json:"is_active"`
 }
+
+type Role struct {
+	ID          int    `json:"id"`
+	Name        string `json:"name"`
+	Description string `json:"description"`
+}

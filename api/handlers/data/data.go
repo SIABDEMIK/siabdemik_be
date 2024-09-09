@@ -1,15 +1,14 @@
-package handlers
+package data
 
 import (
 	"Ayala-Crea/server-app-absensi/models"
+	"Ayala-Crea/server-app-absensi/pkg/mypackage/token"
 	"database/sql"
 	"encoding/json"
 	"fmt"
 	"net/http"
-	"strings"
 	"time"
 
-	"github.com/golang-jwt/jwt/v4"
 	"github.com/xuri/excelize/v2"
 	"golang.org/x/crypto/bcrypt"
 )
@@ -18,20 +17,11 @@ func UploadExcel(db *sql.DB) http.HandlerFunc {
 	return func(w http.ResponseWriter, r *http.Request) {
 		// 1. Ambil token dari header Authorization
 		authHeader := r.Header.Get("Authorization")
-		if authHeader == "" {
-			http.Error(w, "Missing authorization token", http.StatusUnauthorized)
-			return
-		}
 
-		// 2. Validasi token JWT
-		tokenString := strings.Split(authHeader, "Bearer ")[1]
-		claims := &models.Claims{}
-		token, err := jwt.ParseWithClaims(tokenString, claims, func(token *jwt.Token) (interface{}, error) {
-			return jwtKey, nil
-		})
-
-		if err != nil || !token.Valid {
-			http.Error(w, "Invalid token", http.StatusUnauthorized)
+		// Gunakan helper DecodeJWT
+		claims, err := token.DecodeJWT(authHeader)
+		if err != nil {
+			http.Error(w, err.Error(), http.StatusUnauthorized)
 			return
 		}
 
@@ -144,20 +134,11 @@ func GetAllStudentsEmployees(db *sql.DB) http.HandlerFunc {
 	return func(w http.ResponseWriter, r *http.Request) {
 		// 1. Ambil token dari header Authorization
 		authHeader := r.Header.Get("Authorization")
-		if authHeader == "" {
-			http.Error(w, "Missing authorization token", http.StatusUnauthorized)
-			return
-		}
 
-		// 2. Validasi token JWT
-		tokenString := strings.Split(authHeader, "Bearer ")[1]
-		claims := &models.Claims{}
-		token, err := jwt.ParseWithClaims(tokenString, claims, func(token *jwt.Token) (interface{}, error) {
-			return jwtKey, nil
-		})
-
-		if err != nil || !token.Valid {
-			http.Error(w, "Invalid token", http.StatusUnauthorized)
+		// Gunakan helper DecodeJWT
+		_, err := token.DecodeJWT(authHeader)
+		if err != nil {
+			http.Error(w, err.Error(), http.StatusUnauthorized)
 			return
 		}
 
@@ -202,20 +183,11 @@ func GetDataByIdAdmin(db *sql.DB) http.HandlerFunc {
 	return func(w http.ResponseWriter, r *http.Request) {
 		// 1. Ambil token dari header Authorization
 		authHeader := r.Header.Get("Authorization")
-		if authHeader == "" {
-			http.Error(w, "Missing authorization token", http.StatusUnauthorized)
-			return
-		}
 
-		// 2. Validasi token JWT
-		tokenString := strings.Split(authHeader, "Bearer ")[1]
-		claims := &models.Claims{}
-		token, err := jwt.ParseWithClaims(tokenString, claims, func(token *jwt.Token) (interface{}, error) {
-			return jwtKey, nil
-		})
-
-		if err != nil || !token.Valid {
-			http.Error(w, "Invalid token", http.StatusUnauthorized)
+		// Gunakan helper DecodeJWT
+		claims, err := token.DecodeJWT(authHeader)
+		if err != nil {
+			http.Error(w, err.Error(), http.StatusUnauthorized)
 			return
 		}
 
@@ -261,20 +233,11 @@ func CreateDataManual(db *sql.DB) http.HandlerFunc {
 	return func(w http.ResponseWriter, r *http.Request) {
 		// 1. Ambil token dari header Authorization
 		authHeader := r.Header.Get("Authorization")
-		if authHeader == "" {
-			http.Error(w, "Missing authorization token", http.StatusUnauthorized)
-			return
-		}
 
-		// 2. Validasi token JWT dan ambil ID dari klaim
-		tokenString := strings.TrimPrefix(authHeader, "Bearer ")
-		claims := &models.Claims{}
-		token, err := jwt.ParseWithClaims(tokenString, claims, func(token *jwt.Token) (interface{}, error) {
-			return jwtKey, nil
-		})
-
-		if err != nil || !token.Valid {
-			http.Error(w, "Invalid token", http.StatusUnauthorized)
+		// Gunakan helper DecodeJWT
+		claims, err := token.DecodeJWT(authHeader)
+		if err != nil {
+			http.Error(w, err.Error(), http.StatusUnauthorized)
 			return
 		}
 
