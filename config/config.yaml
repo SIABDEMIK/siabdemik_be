@@ -1,0 +1,13 @@
+# config/config.yaml
+app:
+  name: "myapp"
+  environment: "development"
+  port: 8080
+
+database:
+  host: "localhost"
+  port: 5500
+  username: "postgres"
+  password: "pwge24"
+  name: "app-absensi"
+  sslmode: "disable"
